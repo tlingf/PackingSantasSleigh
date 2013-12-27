@@ -106,9 +106,9 @@ class Cursor:
 
 if __name__ == "__main__":
     
-    path = 'xxxx'
+    path = '/Users/ling/PackingSantasSleigh/'
     reverseOrderedPresentsFilename = os.path.join(path, 'presents_revorder.csv')
-    submissionFilename = os.path.join(path, 'sampleSubmission_bottomPacking.csv')
+    submissionFilename = os.path.join(path, 'sample_bottom_packing.csv')
     
     # create header for submission file: PresentId, x1,y1,z1, ... x8,y8,z8
     header = ['PresentId']
@@ -116,12 +116,16 @@ if __name__ == "__main__":
         header += ['x' + str(i), 'y' + str(i), 'z' + str(i)]
      
     myCursor = Cursor()
-    with open(reverseOrderedPresentsFilename, 'rb') as f:
+    with open(reverseOrderedPresentsFilename, 'rU') as f:
         with open(submissionFilename, 'wb') as w:
             f.readline() # header
             fcsv = csv.reader(f)
             wcsv = csv.writer(w)
             wcsv.writerow(header)
+            count = 0
             for row in fcsv:
+                count += 1
+                if count % 10000 == 0:
+                    print row[0]
                 wcsv.writerow([row[0]] + pack_present(myCursor, row))
     print 'Done'
